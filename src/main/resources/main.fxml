@@ -34,7 +34,7 @@
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="17.0" prefWidth="209.0" text="Список свичей" />
                                                 <TextArea fx:id="downPortsSwitchesList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                                <Button mnemonicParsing="false" onAction="#FindDownPorts" prefHeight="25.0" prefWidth="209.0" text="Найти сложенные порты" />
+                                                <Button fx:id="findDownPortsStartButton" mnemonicParsing="false" onAction="#FindDownPorts" prefHeight="25.0" prefWidth="209.0" text="Найти сложенные порты" />
                                              </children>
                                           </VBox>
                                           <VBox prefHeight="215.0" prefWidth="168.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.topAnchor="0.0">
@@ -63,7 +63,7 @@
                                                 <TextField fx:id="findMacMacField" />
                                                 <Label alignment="CENTER" prefHeight="17.0" prefWidth="154.0" text="Свичи" />
                                                 <TextArea fx:id="findMacSwitchesField" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                                <Button mnemonicParsing="false" onAction="#findMac" prefHeight="25.0" prefWidth="150.0" text="Искать" />
+                                                <Button fx:id="findMacButton" mnemonicParsing="false" onAction="#findMac" prefHeight="25.0" prefWidth="150.0" text="Искать" />
                                              </children>
                                           </VBox>
                                           <VBox prefHeight="257.0" prefWidth="204.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="0.0">
@@ -75,7 +75,7 @@
                                           <VBox layoutX="370.0" prefHeight="242.0" prefWidth="256.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="375.0" AnchorPane.topAnchor="15.0">
                                              <children>
                                                 <TextArea fx:id="findMacFilterArea" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                                <Button mnemonicParsing="false" onAction="#filterByNumberOfMacsOnPort" prefHeight="25.0" prefWidth="258.0" text="Проверить на количество маков" />
+                                                <Button fx:id="findMacNumberMacButton" mnemonicParsing="false" onAction="#filterByNumberOfMacsOnPort" prefHeight="25.0" prefWidth="258.0" text="Проверить на количество маков" />
                                              </children>
                                           </VBox>
                                        </children></AnchorPane>
@@ -146,12 +146,12 @@
                                                       <Insets />
                                                    </VBox.margin>
                                                 </HBox>
-                                                <Button mnemonicParsing="false" onAction="#doDynamic" prefHeight="25.0" prefWidth="197.0" text="Закинуть динамику (только ZTE)">
+                                                <Button fx:id="doDynamicButton" mnemonicParsing="false" onAction="#doDynamic" prefHeight="25.0" prefWidth="197.0" text="Закинуть динамику (ZTE, Linksys)">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
                                                    </VBox.margin>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#doStatic" prefHeight="25.0" prefWidth="197.0" text="Закинуть статику (только ZTE)">
+                                                <Button fx:id="doStaticButton" mnemonicParsing="false" onAction="#doStatic" prefHeight="25.0" prefWidth="197.0" text="Закинуть статику (ZTE)">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
                                                    </VBox.margin>

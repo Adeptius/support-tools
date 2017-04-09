@@ -72,7 +72,7 @@ public class Gui extends Application {
         }
     }
 
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
 
     public void startGui(){
         launch();

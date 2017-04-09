@@ -48,7 +48,7 @@ public class TelnetClient {
 //        TelnetClient client = new TelnetClient("172.22.106.41"); // foxgate неизвестный
 //        TelnetClient client = new TelnetClient("172.18.192.21"); // raisecom
 //        TelnetClient client = new TelnetClient("172.18.192.11"); // dlink
-        TelnetClient client = new TelnetClient("172.18.194.121");
+        TelnetClient client = new TelnetClient("172.21.11.40");
         client.run();
     }
 
@@ -93,7 +93,7 @@ public class TelnetClient {
 //        int port = swich.findMac("001320125de1");
 //        System.out.println(port);
 
-//        swich.makeDhcpOnPort(2);
+//        swich.makeDhcpOnPort(23);
 //        swich.makeStaticOnPort(2);
     }
 
@@ -165,6 +165,8 @@ public class TelnetClient {
                     return new FoxGate(outputStream, inputStream);
                 }else if (s.equals("ÿû\u0003ÿû\u0001\u001B[0m\u001B[")){
                     return new Dlink(outputStream, inputStream);
+                }else if (s.equals("ÿû\u0003ÿý\u0001ÿû\u0001\r\n\r\r")){
+                    return new Linksys(outputStream, inputStream);
                 }
             }
         }

@@ -4,6 +4,7 @@ package adeptius.javafx;
 import adeptius.exceptions.FunctionNotSupportedException;
 import adeptius.exceptions.SimultaneousConfigException;
 import adeptius.exceptions.UnknownSwitchException;
+import adeptius.swich.Linksys;
 import adeptius.telnet.TelnetClient;
 import adeptius.utilites.StringUtils;
 import adeptius.utilites.Utils;
@@ -84,7 +85,7 @@ public class GuiController implements Initializable {
             String mac = cleanMac(findMacMacField.getText());
             findMacMacField.setText(mac);
             ArrayList<String> switches = getSwitchesFromString(findMacSwitchesField.getText());
-
+            hideButtons();
             switches.parallelStream().forEach(ip -> {
                 try {
                     TelnetClient client = new TelnetClient(ip);
@@ -112,6 +113,7 @@ public class GuiController implements Initializable {
                         shortLogArea.appendText("---Завершено---");
                         findMacResultArea.appendText("---Завершено---");
                     }
+                    showButtons();
                 }
             });
         }).start();
@@ -132,6 +134,7 @@ public class GuiController implements Initializable {
                     map.put(swAndMac[0], Integer.parseInt(swAndMac[1]));
                 }
             }
+            hideButtons();
 
             map.keySet().parallelStream().forEach(ip -> {
                 try {
@@ -160,6 +163,7 @@ public class GuiController implements Initializable {
                         findMacFilterArea.appendText("---Завершено---");
                         shortLogArea.appendText("---Завершено---");
                     }
+                    showButtons();
                 }
             });
         }).start();
@@ -179,7 +183,7 @@ public class GuiController implements Initializable {
             shortLogArea.setText("");
             downPortsResultArea.setText("");
             completed = 0;
-
+            hideButtons();
             switches.stream().parallel().forEach(ip -> {
                 try {
                     TelnetClient client = new TelnetClient(ip);
@@ -203,6 +207,7 @@ public class GuiController implements Initializable {
                         shortLogArea.appendText("---Завершено---");
                         downPortsResultArea.appendText("---Завершено---");
                     }
+                    showButtons();
                 }
             });
         }).start();
@@ -289,18 +294,25 @@ public class GuiController implements Initializable {
     public void doDynamic() {
         String ip = switchText.getText().trim();
         int port = Integer.parseInt(portTest.getText().trim());
+        hideButtons();
+
         new Thread(() -> {
             try {
                 TelnetClient client = new TelnetClient(ip);
+                if (client.swich instanceof Linksys){
+                    fullLogArea.setText("Ищем привязки в running config, удаляем их, передёргиваем порт. Ждите около 30 сек.\n");
+                }
                 client.swich.makeDhcpOnPort(port);
                 print(ip + "\n");
                 print(client.swich.result.toString());
-            }catch (SimultaneousConfigException e){
+            } catch (SimultaneousConfigException e) {
                 shortLogArea.appendText(ip + " СБОЙ Выйди из Enable\n");
-            }catch (FunctionNotSupportedException e){
+            } catch (FunctionNotSupportedException e) {
                 shortLogArea.appendText(ip + " СБОЙ Функция не поддерживается\n");
             } catch (Exception e) {
                 shortLogArea.appendText(ip + " СБОЙ\n");
+            } finally {
+                showButtons();
             }
         }).start();
     }
@@ -309,22 +321,52 @@ public class GuiController implements Initializable {
     public void doStatic() {
         String ip = switchText.getText().trim();
         int port = Integer.parseInt(portTest.getText().trim());
+        hideButtons();
         new Thread(() -> {
             try {
                 TelnetClient client = new TelnetClient(ip);
                 client.swich.makeStaticOnPort(port);
                 print(ip + "\n");
                 print(client.swich.result.toString());
-            }catch (SimultaneousConfigException e){
+            } catch (SimultaneousConfigException e) {
                 shortLogArea.appendText(ip + " СБОЙ Выйди из Enable\n");
-            }catch (FunctionNotSupportedException e){
+            } catch (FunctionNotSupportedException e) {
                 shortLogArea.appendText(ip + " СБОЙ Функция не поддерживается\n");
             } catch (Exception e) {
                 shortLogArea.appendText(ip + " СБОЙ\n");
+            }finally {
+                showButtons();
             }
         }).start();
     }
 
+    @FXML
+    private Button findDownPortsStartButton;
+    @FXML
+    private Button findMacButton;
+    @FXML
+    private Button findMacNumberMacButton;
+    @FXML
+    private Button doDynamicButton;
+    @FXML
+    private Button doStaticButton;
+
+
+    private void hideButtons() {
+        findDownPortsStartButton.setVisible(false);
+        findMacButton.setVisible(false);
+        findMacNumberMacButton.setVisible(false);
+        doDynamicButton.setVisible(false);
+        doStaticButton.setVisible(false);
+    }
+
+    private void showButtons() {
+        findDownPortsStartButton.setVisible(true);
+        findMacButton.setVisible(true);
+        findMacNumberMacButton.setVisible(true);
+        doDynamicButton.setVisible(true);
+        doStaticButton.setVisible(true);
+    }
 
     @FXML
     void dhcpStop(ActionEvent event) {

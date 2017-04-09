@@ -79,10 +79,12 @@ public class Dlink extends Swich {
     public ArrayList<Integer> getDownedPorts() throws Exception {
         sendCommand("sh ports 1-9\n");
         String s = waitForString("SPACE");
-        sendCommand("sh ports 10-19\n");
+        sendCommand("sh ports 10-14\n");
         s = s + waitForString("SPACE");
-        sendCommand("sh ports 20-24\n");
+        sendCommand("sh ports 15-18\n");
         s = s + waitForString("SPACE");
+        sendCommand("sh ports 19-24\n");
+        s = s + waitForString("SPACE", "Next possible");
         ArrayList<Integer> downed = new ArrayList<>();
         Matcher regexMatcher = Pattern.compile("\\d{1,2}[ ]*(Enabled|Disabled)").matcher(s);
         while (regexMatcher.find()){

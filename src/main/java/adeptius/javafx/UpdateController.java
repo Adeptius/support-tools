@@ -33,12 +33,7 @@ public class UpdateController implements Initializable {
 
     public void update() {
         String url = "http://195.181.208.31/web/support/downloadNewest";
-        try {
-            Gui.hostServices.showDocument(url);
-            java.awt.Desktop.getDesktop().browse(new URI(url));
-        } catch (IOException | URISyntaxException e1) {
-            e1.printStackTrace();
-        }
+        Gui.hostServices.showDocument(url);
         Platform.exit();
     }
 }
