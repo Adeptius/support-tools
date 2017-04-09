@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="599.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adeptius.javafx.GuiController">
+
+   <children>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" VBox.vgrow="ALWAYS">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <TabPane prefHeight="500.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <tabs>
+                      <Tab text="Сложенные порты">
+                           <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <AnchorPane minHeight="200.0" prefHeight="200.0" prefWidth="402.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <VBox prefHeight="215.0" prefWidth="207.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="209.0" text="Список свичей" />
+                                                <TextArea fx:id="downPortsSwitchesList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                                <Button mnemonicParsing="false" onAction="#FindDownPorts" prefHeight="25.0" prefWidth="209.0" text="Найти сложенные порты" />
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="215.0" prefWidth="168.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="172.0" text="Результат" />
+                                                <TextArea fx:id="downPortsResultArea" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                             </children>
+                                          </VBox>
+                                       </children></AnchorPane>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                      </Tab>
+                      <Tab text="Поиск мака">
+                           <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <AnchorPane minHeight="200.0" prefHeight="200.0" prefWidth="402.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <VBox prefHeight="215.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="179.0" text="Мак" />
+                                                <TextField fx:id="findMacMacField" />
+                                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="154.0" text="Свичи" />
+                                                <TextArea fx:id="findMacSwitchesField" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                                <Button mnemonicParsing="false" onAction="#findMac" prefHeight="25.0" prefWidth="150.0" text="Искать" />
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="257.0" prefWidth="204.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="219.0" text="Мак найден на свичах" />
+                                                <TextArea fx:id="findMacResultArea" prefHeight="240.0" prefWidth="192.0" VBox.vgrow="ALWAYS" />
+                                             </children>
+                                          </VBox>
+                                          <VBox layoutX="370.0" prefHeight="242.0" prefWidth="256.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="375.0" AnchorPane.topAnchor="15.0">
+                                             <children>
+                                                <TextArea fx:id="findMacFilterArea" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                                <Button mnemonicParsing="false" onAction="#filterByNumberOfMacsOnPort" prefHeight="25.0" prefWidth="258.0" text="Проверить на количество маков" />
+                                             </children>
+                                          </VBox>
+                                       </children></AnchorPane>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                      </Tab>
+                        <Tab text="Логи DHCP">
+                           <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <VBox prefHeight="255.0" prefWidth="256.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="2.0">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="261.0" text="DHCP сервер" />
+                                                <ListView fx:id="dhcpServerList" prefHeight="238.0" prefWidth="247.0" VBox.vgrow="ALWAYS" />
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="225.0" prefWidth="179.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="260.0" AnchorPane.topAnchor="20.0">
+                                             <children>
+                                                <TextField fx:id="dhcpMacInput" />
+                                                <Button fx:id="dhcpMacButton" mnemonicParsing="false" onAction="#dhcpFindByMac" prefHeight="25.0" prefWidth="182.0" text="Искать по маку" />
+                                                <Button fx:id="dhcpIpButton" mnemonicParsing="false" onAction="#dhcpFindByIp" prefHeight="25.0" prefWidth="191.0" text="Искать по ip" />
+                                                <Button fx:id="dhcpStopButton" mnemonicParsing="false" onAction="#dhcpStop" prefHeight="25.0" prefWidth="202.0" text="Остановить" />
+                                                <Label fx:id="dhcpLabel" alignment="CENTER" prefHeight="54.0" prefWidth="179.0" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                        </Tab>
+                        <Tab text="Разное">
+                           <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <VBox prefHeight="257.0" prefWidth="220.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <HBox prefHeight="36.0" prefWidth="190.0">
+                                                   <children>
+                                                      <VBox prefHeight="42.0" prefWidth="140.0">
+                                                         <children>
+                                                            <Label prefHeight="17.0" prefWidth="126.0" text="Свич" />
+                                                            <TextField fx:id="switchText" />
+                                                         </children>
+                                                         <HBox.margin>
+                                                            <Insets right="5.0" />
+                                                         </HBox.margin>
+                                                      </VBox>
+                                                      <VBox prefHeight="42.0" prefWidth="51.0">
+                                                         <children>
+                                                            <Label prefHeight="17.0" prefWidth="137.0" text="Порт" />
+                                                            <TextField fx:id="portTest" prefHeight="25.0" prefWidth="45.0" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                   <VBox.margin>
+                                                      <Insets />
+                                                   </VBox.margin>
+                                                </HBox>
+                                                <Button mnemonicParsing="false" onAction="#doDynamic" prefHeight="25.0" prefWidth="197.0" text="Закинуть динамику (только ZTE)">
+                                                   <VBox.margin>
+                                                      <Insets top="5.0" />
+                                                   </VBox.margin>
+                                                </Button>
+                                                <Button mnemonicParsing="false" onAction="#doStatic" prefHeight="25.0" prefWidth="197.0" text="Закинуть статику (только ZTE)">
+                                                   <VBox.margin>
+                                                      <Insets top="5.0" />
+                                                   </VBox.margin>
+                                                </Button>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </VBox>
+                                          <VBox layoutX="237.0" prefHeight="257.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="210.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                        </Tab>
+                    </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <SplitPane dividerPositions="0.29797979797979796" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                           <children>
+                              <TextArea fx:id="shortLogArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                           <children>
+                              <TextArea fx:id="fullLogArea" layoutX="96.0" layoutY="37.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</VBox>
