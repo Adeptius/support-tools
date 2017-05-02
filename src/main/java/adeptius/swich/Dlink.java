@@ -18,6 +18,16 @@ public class Dlink extends Swich {
     }
 
     @Override
+    public String findMacBdCom(String mac) throws Exception {
+        throw new FunctionNotSupportedException();
+    }
+
+    @Override
+    public void portUp(int port) throws Exception {
+        throw new FunctionNotSupportedException();
+    }
+
+    @Override
     public void makeStaticOnPort(int port) throws Exception {
         throw new FunctionNotSupportedException();
     }

@@ -1,9 +1,14 @@
 package adeptius.javafx;
 
 
+import adeptius.dao.VpsDao;
 import adeptius.exceptions.FunctionNotSupportedException;
 import adeptius.exceptions.SimultaneousConfigException;
 import adeptius.exceptions.UnknownSwitchException;
+import adeptius.host.PauseChecker;
+import adeptius.host.PauseState;
+import adeptius.host.PauseWatcher;
+import adeptius.swich.Bdcom;
 import adeptius.swich.Linksys;
 import adeptius.telnet.TelnetClient;
 import adeptius.utilites.StringUtils;
@@ -14,17 +19,25 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
-import java.io.InputStream;
+import java.awt.*;
+import java.io.*;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static adeptius.utilites.StringUtils.*;
 
+@SuppressWarnings("Duplicates")
 public class GuiController implements Initializable {
 
     public static GuiController guiController;
@@ -57,6 +70,12 @@ public class GuiController implements Initializable {
     @FXML
     private TextArea downPortsResultArea;
 
+    @FXML
+    private TextArea feedbackFutureList;
+
+
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ArrayList<String> list = serversAndIp.keySet().stream().collect(Collectors.toCollection(ArrayList::new));
@@ -64,6 +83,48 @@ public class GuiController implements Initializable {
         dhcpServerList.setOnMouseClicked(event -> dhcpLabel.setText(
                 StringUtils.convertArrToString(serversAndIp.get(dhcpServerList.getSelectionModel().getSelectedItem()))));
         dhcpStopButton.setDisable(true);
+        dosStopButton.setVisible(false);
+        try {
+            String future = VpsDao.getValue("futureList").replaceAll("\\|", "\n");
+            feedbackFutureList.setText(future);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        watchPauseButton.setVisible(false);
+//        notifyIfCanPauseButton.setVisible(false);
+
+        new PauseWatcher(this);
+    }
+
+    @FXML
+    private Button findDownPortsStartButton;
+    @FXML
+    private Button findMacButton;
+    @FXML
+    private Button findMacNumberMacButton;
+    @FXML
+    private Button doDynamicButton;
+    @FXML
+    private Button doStaticButton;
+
+
+    private void hideButtons() {
+        findDownPortsStartButton.setVisible(false);
+        findMacButton.setVisible(false);
+        findMacNumberMacButton.setVisible(false);
+        doDynamicButton.setVisible(false);
+        doStaticButton.setVisible(false);
+        findMacBdcomButton.setVisible(false);
+    }
+
+    private void showButtons() {
+        findDownPortsStartButton.setVisible(true);
+        findMacButton.setVisible(true);
+        findMacNumberMacButton.setVisible(true);
+        doDynamicButton.setVisible(true);
+        doStaticButton.setVisible(true);
+        findMacBdcomButton.setVisible(true);
     }
 
     public static void print(String s) {
@@ -169,10 +230,6 @@ public class GuiController implements Initializable {
         }).start();
     }
 
-    private void clearResults() {
-
-    }
-
     public static volatile int completed = 0;
 
     @FXML
@@ -246,6 +303,12 @@ public class GuiController implements Initializable {
         find();
     }
 
+    //Дхцп логи
+    @FXML
+    void dhcpStop(ActionEvent event) {
+        interrupted = true;
+    }
+
     void find() {
         interrupted = false;
         dhcpIpButton.setDisable(true);
@@ -285,6 +348,8 @@ public class GuiController implements Initializable {
         }
     }
 
+
+    // Закидывание статики или динамики
     @FXML
     private TextField switchText;
 
@@ -299,7 +364,7 @@ public class GuiController implements Initializable {
         new Thread(() -> {
             try {
                 TelnetClient client = new TelnetClient(ip);
-                if (client.swich instanceof Linksys){
+                if (client.swich instanceof Linksys) {
                     fullLogArea.setText("Ищем привязки в running config, удаляем их, передёргиваем порт. Ждите около 30 сек.\n");
                 }
                 client.swich.makeDhcpOnPort(port);
@@ -334,42 +399,220 @@ public class GuiController implements Initializable {
                 shortLogArea.appendText(ip + " СБОЙ Функция не поддерживается\n");
             } catch (Exception e) {
                 shortLogArea.appendText(ip + " СБОЙ\n");
-            }finally {
+            } finally {
                 showButtons();
             }
         }).start();
     }
 
-    @FXML
-    private Button findDownPortsStartButton;
-    @FXML
-    private Button findMacButton;
-    @FXML
-    private Button findMacNumberMacButton;
-    @FXML
-    private Button doDynamicButton;
-    @FXML
-    private Button doStaticButton;
 
+    // Дос
+    private Process process;
+    @FXML
+    private TextField abonIpField;
+    @FXML
+    private Button dosStopButton;
+    @FXML
+    private Button dosStartButton;
 
-    private void hideButtons() {
-        findDownPortsStartButton.setVisible(false);
-        findMacButton.setVisible(false);
-        findMacNumberMacButton.setVisible(false);
-        doDynamicButton.setVisible(false);
-        doStaticButton.setVisible(false);
+    @FXML
+    public void startDos() {
+        dosStartButton.setVisible(false);
+        dosStopButton.setVisible(true);
+        fullLogArea.setText("");
+        new Thread(() -> {
+            try {
+                String iperfURL = Utils.copyIPerf();
+                String ip = abonIpField.getText().trim();
+                process = Runtime.getRuntime().exec(iperfURL + " -c " + ip + " -u -P 5 -i 1 -p 5001 -f m -b 100M -t 60");
+                BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                line = input.readLine();
+                while (line != null) {
+                    line = input.readLine();
+                    if (line.startsWith("[SUM]")) {
+                        fullLogArea.appendText(line + "\n");
+                    }
+                }
+            } catch (Exception ignored) {
+
+            } finally {
+                dosStartButton.setVisible(true);
+                dosStopButton.setVisible(false);
+            }
+        }).start();
     }
 
-    private void showButtons() {
-        findDownPortsStartButton.setVisible(true);
-        findMacButton.setVisible(true);
-        findMacNumberMacButton.setVisible(true);
-        doDynamicButton.setVisible(true);
-        doStaticButton.setVisible(true);
+    @FXML
+    public void stopDos() throws Exception {
+        if (process != null) {
+            process.destroy();
+        }
+        dosStartButton.setVisible(true);
+        dosStopButton.setVisible(false);
+    }
+
+
+    // Обратная связь:
+    @FXML
+    private TextArea feedbackTextArea;
+
+    @FXML
+    private TextField feedbackNik;
+
+    @FXML
+    private Label feedbackResultLabel;
+
+    public void sendFeedback() {
+        String text = feedbackTextArea.getText();
+        String nick = feedbackNik.getText().trim();
+        String result = VpsDao.sendFeedBack(nick, text);
+        feedbackResultLabel.setText(result);
     }
 
     @FXML
-    void dhcpStop(ActionEvent event) {
-        interrupted = true;
+    private Button findMacBdcomButton;
+
+//    @FXML
+//    private ListView<String> listOfBdComs;
+//
+//    @FXML
+//    private TextField inputBdComField;
+//
+//
+//    public void addBdcomToDB(){
+//
+//    }
+//
+//    public void removeFromDb(){
+//
+//    }
+
+
+    public void findMacOnBdCom() {
+        new Thread(() -> {
+            completed = 0;
+            fullLogArea.setText("");
+            shortLogArea.setText("");
+            findMacResultArea.setText("");
+            findMacFilterArea.setText("");
+
+            String mac = cleanMac(findMacMacField.getText());
+            findMacMacField.setText(mac);
+            ArrayList<String> switches = getSwitchesFromString(findMacSwitchesField.getText());
+            hideButtons();
+            switches.parallelStream().forEach(ip -> {
+                try {
+                    TelnetClient client = new TelnetClient(ip);
+                    if (!(client.swich instanceof Bdcom)) {
+                        shortLogArea.appendText(ip + " Это не BDCOM\n");
+                        return;
+                    }
+                    String port = client.swich.findMacBdCom(mac);
+                    print(ip + "\n");
+                    print(client.swich.result.toString());
+                    if (port != null) {
+                        findMacResultArea.appendText(ip + "-" + port + "\n");
+                    } else {
+                        shortLogArea.appendText(ip + " не найдено\n");
+                    }
+                    client.disconnect();
+                } catch (FunctionNotSupportedException | UnknownSwitchException e) {
+                    shortLogArea.appendText(ip + " Не BDCOM\n");
+                } catch (Exception e) {
+                    shortLogArea.appendText(ip + " СБОЙ\n");
+                } finally {
+                    completed++;
+                    if (completed == switches.size()) {
+                        fullLogArea.appendText("---Завершено---");
+                        shortLogArea.appendText("---Завершено---");
+                        findMacResultArea.appendText("---Завершено---");
+                    }
+                    showButtons();
+                }
+            });
+        }).start();
+    }
+
+
+    @FXML
+    private TextField cockieField;
+
+    @FXML
+    private Label coockiesStatus;
+
+    @FXML
+    public Button watchPauseButton;
+
+    @FXML
+    public Button notifyIfCanPauseButton;
+
+    public static volatile boolean needWatchIfOnPause;
+    public static volatile boolean needNotifyAvailablePause;
+
+    public static String currentCoockie;
+
+    public void setCoockies() {
+        String coockies = cockieField.getText();
+        if (coockies == null || !coockies.contains("PHPSESSID=")) {
+            Platform.runLater(() -> {
+                coockiesStatus.setText("Куки неправильные");
+                watchPauseButton.setVisible(false);
+                notifyIfCanPauseButton.setVisible(false);
+            });
+            return;
+        }
+
+        coockies = coockies.substring(coockies.indexOf("PHPSESSID=") + 10);
+        coockies = coockies.substring(0, coockies.indexOf(";"));
+
+        currentCoockie = coockies;
+        try {
+            PauseState state = PauseChecker.getState(currentCoockie);
+            if (state == PauseState.SESSION_ERROR) {
+                Platform.runLater(() -> {
+                    coockiesStatus.setText("Куки неправильные");
+                    watchPauseButton.setVisible(false);
+                    notifyIfCanPauseButton.setVisible(false);
+                });
+
+            } else {
+                Platform.runLater(() -> {
+                    coockiesStatus.setText("Куки рабочие");
+                    watchPauseButton.setVisible(true);
+                    notifyIfCanPauseButton.setVisible(true);
+                });
+            }
+        } catch (Exception e) {
+            coockiesStatus.setText("Ошибка");
+            Platform.runLater(() -> {
+                watchPauseButton.setVisible(false);
+                notifyIfCanPauseButton.setVisible(false);
+            });
+        }
+
+        watchPauseButton.setOnMouseClicked(event -> {
+            if (needWatchIfOnPause){
+                needWatchIfOnPause = false;
+                Platform.runLater(() -> watchPauseButton.setText("Наблюдать за паузой"));
+            }else {
+                needWatchIfOnPause = true;
+                Platform.runLater(() -> watchPauseButton.setText("Не наблюдать за паузой"));
+            }
+        });
+
+        notifyIfCanPauseButton.setOnMouseClicked(event -> {
+            if (needNotifyAvailablePause){
+                needNotifyAvailablePause = false;
+                Platform.runLater(() -> notifyIfCanPauseButton.setText("Сообщить о свободном месте"));
+            }else {
+                needNotifyAvailablePause = true;
+                Platform.runLater(() -> notifyIfCanPauseButton.setText("Не сообщать о свободном месте"));
+            }
+        });
+    }
+
+    public void openHostInBrowser() {
+        Gui.hostServices.showDocument("http://host.o3.ua/support/");
     }
 }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -62,8 +64,15 @@
                                                 <Label alignment="CENTER" prefHeight="17.0" prefWidth="179.0" text="Мак" />
                                                 <TextField fx:id="findMacMacField" />
                                                 <Label alignment="CENTER" prefHeight="17.0" prefWidth="154.0" text="Свичи" />
-                                                <TextArea fx:id="findMacSwitchesField" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                                <Button fx:id="findMacButton" mnemonicParsing="false" onAction="#findMac" prefHeight="25.0" prefWidth="150.0" text="Искать" />
+                                                <TextArea fx:id="findMacSwitchesField" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                                   <VBox.margin>
+                                                      <Insets bottom="5.0" />
+                                                   </VBox.margin></TextArea>
+                                                <Button fx:id="findMacButton" mnemonicParsing="false" onAction="#findMac" prefHeight="25.0" prefWidth="150.0" text="Искать">
+                                                   <VBox.margin>
+                                                      <Insets bottom="5.0" />
+                                                   </VBox.margin></Button>
+                                                <Button fx:id="findMacBdcomButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findMacOnBdCom" text="Искать на BDCOM" />
                                              </children>
                                           </VBox>
                                           <VBox prefHeight="257.0" prefWidth="204.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="0.0">
@@ -72,9 +81,9 @@
                                                 <TextArea fx:id="findMacResultArea" prefHeight="240.0" prefWidth="192.0" VBox.vgrow="ALWAYS" />
                                              </children>
                                           </VBox>
-                                          <VBox layoutX="370.0" prefHeight="242.0" prefWidth="256.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="375.0" AnchorPane.topAnchor="15.0">
+                                          <VBox layoutX="370.0" prefHeight="242.0" prefWidth="206.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="375.0" AnchorPane.topAnchor="15.0">
                                              <children>
-                                                <TextArea fx:id="findMacFilterArea" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                                <TextArea fx:id="findMacFilterArea" prefHeight="217.0" prefWidth="211.0" VBox.vgrow="ALWAYS" />
                                                 <Button fx:id="findMacNumberMacButton" mnemonicParsing="false" onAction="#filterByNumberOfMacsOnPort" prefHeight="25.0" prefWidth="258.0" text="Проверить на количество маков" />
                                              </children>
                                           </VBox>
@@ -161,13 +170,119 @@
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </padding>
                                           </VBox>
-                                          <VBox layoutX="237.0" prefHeight="257.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="210.0" AnchorPane.topAnchor="0.0" />
+                                          <VBox layoutX="220.0" layoutY="-6.0" prefHeight="254.0" prefWidth="224.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="210.0" AnchorPane.topAnchor="3.0">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="204.0" text="IP Абонента" />
+                                                <TextField fx:id="abonIpField" />
+                                                <HBox prefHeight="19.0" prefWidth="193.0">
+                                                   <children>
+                                                      <Button fx:id="dosStartButton" mnemonicParsing="false" onAction="#startDos" prefHeight="25.0" prefWidth="96.0" text="Начать ДОС" />
+                                                      <Button fx:id="dosStopButton" mnemonicParsing="false" onAction="#stopDos" prefHeight="25.0" prefWidth="125.0" text="Остановить ДОС">
+                                                         <HBox.margin>
+                                                            <Insets left="5.0" />
+                                                         </HBox.margin>
+                                                      </Button>
+                                                   </children>
+                                                   <VBox.margin>
+                                                      <Insets bottom="5.0" top="5.0" />
+                                                   </VBox.margin>
+                                                </HBox>
+                                                <Label alignment="CENTER" prefHeight="28.0" prefWidth="222.0" text="Дос пока только для Windows" />
+                                             </children></VBox>
                                        </children>
                                     </AnchorPane>
                                  </children>
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
+                              </VBox>
+                           </content>
+                        </Tab>
+                        <Tab text="Связь">
+                           <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <VBox prefHeight="267.0" prefWidth="369.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="369.0" text="Сообщить о баге или о чем-то еще" />
+                                                <TextArea fx:id="feedbackTextArea" prefHeight="89.0" prefWidth="369.0" />
+                                                <HBox prefHeight="27.0" prefWidth="359.0">
+                                                   <VBox.margin>
+                                                      <Insets top="5.0" />
+                                                   </VBox.margin>
+                                                   <children>
+                                                      <Label prefHeight="17.0" prefWidth="37.0" text="Ник:">
+                                                         <font>
+                                                            <Font size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextField fx:id="feedbackNik" prefHeight="25.0" prefWidth="235.0" />
+                                                      <Button mnemonicParsing="false" onAction="#sendFeedback" prefHeight="25.0" prefWidth="90.0" text="Отправить" />
+                                                   </children>
+                                                </HBox>
+                                                <Label fx:id="feedbackResultLabel" alignment="CENTER" prefHeight="24.0" prefWidth="359.0" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </VBox>
+                                          <VBox prefHeight="267.0" prefWidth="362.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="370.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="358.0" text="Идеи. Было бы только время.." />
+                                                <TextArea fx:id="feedbackFutureList" editable="false" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </VBox>
+                           </content>
+                        </Tab>
+                        <Tab text="HOST">
+                           <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <VBox prefHeight="267.0" prefWidth="213.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                             <children>
+                                                <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Кукисы:" />
+                                                <HBox prefHeight="21.0" prefWidth="203.0">
+                                                   <children>
+                                                      <TextField fx:id="cockieField" />
+                                                      <Button mnemonicParsing="false" onAction="#setCoockies" text="Задать" />
+                                                   </children>
+                                                </HBox>
+                                                <Label fx:id="coockiesStatus" alignment="CENTER" maxWidth="1.7976931348623157E308" />
+                                                <Button fx:id="watchPauseButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Наблюдать за паузой" />
+                                                <Button fx:id="notifyIfCanPauseButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Сообщить о свободном месте">
+                                                   <VBox.margin>
+                                                      <Insets top="5.0" />
+                                                   </VBox.margin>
+                                                </Button>
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="267.0" prefWidth="258.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.topAnchor="0.0">
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                             <children>
+                                                <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="12.0" prefWidth="248.0" text="Где взять кукисы:" />
+                                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openHostInBrowser" text="Сначала перейти в хост" />
+                                                <Label prefHeight="98.0" prefWidth="248.0" text="В браузере нажать ctrl+shift+i,  во вкладке &quot;сеть&quot; нажать на повторяющийся запрос и скопировать кукисы, которые содержат PHPSESSID." wrapText="true" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
                               </VBox>
                            </content>
                         </Tab>

@@ -16,6 +16,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class Gui extends Application {
 
@@ -72,7 +75,7 @@ public class Gui extends Application {
         }
     }
 
-    private static final int VERSION = 6;
+    private static final int VERSION = 12;
 
     public void startGui(){
         launch();

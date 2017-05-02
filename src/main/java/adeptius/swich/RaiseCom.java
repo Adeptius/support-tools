@@ -15,6 +15,16 @@ public class RaiseCom extends Swich {
     }
 
     @Override
+    public String findMacBdCom(String mac) throws Exception {
+        throw new FunctionNotSupportedException();
+    }
+
+    @Override
+    public void portUp(int port) throws Exception {
+        throw new FunctionNotSupportedException();
+    }
+
+    @Override
     public void makeDhcpOnPort(int port) throws Exception {
         throw new FunctionNotSupportedException();
     }

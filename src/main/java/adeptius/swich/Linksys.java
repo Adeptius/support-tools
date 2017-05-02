@@ -19,6 +19,16 @@ public class Linksys extends Swich {
     }
 
     @Override
+    public String findMacBdCom(String mac) throws Exception {
+        throw new FunctionNotSupportedException();
+    }
+
+    @Override
+    public void portUp(int port) throws Exception {
+        throw new FunctionNotSupportedException();
+    }
+
+    @Override
     public void makeStaticOnPort(int port) throws Exception {
         throw new FunctionNotSupportedException();
     }
@@ -162,7 +172,13 @@ public class Linksys extends Swich {
         sendCommand(LOGIN + "\n");
         waitForString("Password:");
         sendCommand(PASS + "\n");
-        waitForString("console#");
+        String s =waitForString("console#", "User Name:");
+        if (s.endsWith("User Name:")){
+            sendCommand("admin\n");
+            waitForString("Password:");
+            sendCommand("nenimdada\n");
+            waitForString("console#");
+        }
     }
 
     @Override

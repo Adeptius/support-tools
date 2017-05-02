@@ -48,7 +48,7 @@ public class TelnetClient {
 //        TelnetClient client = new TelnetClient("172.22.106.41"); // foxgate неизвестный
 //        TelnetClient client = new TelnetClient("172.18.192.21"); // raisecom
 //        TelnetClient client = new TelnetClient("172.18.192.11"); // dlink
-        TelnetClient client = new TelnetClient("172.21.11.40");
+        TelnetClient client = new TelnetClient("172.21.40.20"); // Bdcom
         client.run();
     }
 
@@ -84,14 +84,15 @@ public class TelnetClient {
 //            System.out.println("----"+mac+"----");
 //        }
 
-        List<Integer> downed = swich.getDownedPorts();
-        System.out.println();
-        for (Integer integer : downed) {
-            System.out.println(integer);
-        }
+//        List<Integer> downed = swich.getDownedPorts();
+//        System.out.println();
+//        for (Integer integer : downed) {
+//            System.out.println(integer);
+//        }
 
-//        int port = swich.findMac("001320125de1");
-//        System.out.println(port);
+//        int port = swich.findMac("e894f6f72bc3");
+        String port = swich.findMacBdCom("d850e6471709");
+        System.out.println(port);
 
 //        swich.makeDhcpOnPort(23);
 //        swich.makeStaticOnPort(2);
@@ -144,6 +145,11 @@ public class TelnetClient {
                 ) {
             System.out.println("raisecom");
             return new RaiseCom(outputStream, inputStream);
+        }else if (
+                   Arrays.equals(buf, new int[]{})
+                ) {
+            System.out.println("bdcom");
+            return new Bdcom(outputStream, inputStream);
         } else if (
                 Arrays.equals(buf, new int[]{255, 251, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}) ||
                 Arrays.equals(buf, new int[]{255, 253, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
@@ -167,6 +173,8 @@ public class TelnetClient {
                     return new Dlink(outputStream, inputStream);
                 }else if (s.equals("ÿû\u0003ÿý\u0001ÿû\u0001\r\n\r\r")){
                     return new Linksys(outputStream, inputStream);
+                }else if (s.equals("ÿû\u0003ÿý\u0018ÿý\u001FUs")){
+                    return new Bdcom(outputStream, inputStream);
                 }
             }
         }

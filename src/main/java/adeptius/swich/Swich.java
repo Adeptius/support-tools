@@ -33,38 +33,18 @@ public abstract class Swich {
 
     abstract public void makeStaticOnPort(int port) throws Exception;
 
+    abstract public void portUp(int port) throws Exception;
+
+    abstract public String findMacBdCom(String mac) throws Exception;
+
     public StringBuilder result = new StringBuilder();
 
     protected String waitForString(String awaiting) throws Exception {
         return waitForString(new String[]{awaiting});
-//        int c;
-//        String s = "";
-//        while ((c = inputStream.read()) != -1) {
-//            System.err.print((char) c);
-//            s += ((char) c);
-//            checkForStop(s);
-//            if (s.endsWith(awaiting)) {
-//                result.append(s);
-//                return s;
-//            }
-//        }
-//        return "Error";
     }
 
     protected String waitForString(String awaiting, String awaiting2) throws Exception {
         return waitForString(new String[]{awaiting,awaiting2});
-//        int c;
-//        String s = "";
-//        while ((c = inputStream.read()) != -1) {
-//            System.err.print((char) c);
-//            s += ((char) c);
-//            checkForStop(s);
-//            if (s.endsWith(awaiting) || s.endsWith(awaiting2)) {
-//                result.append(s);
-//                return s;
-//            }
-//        }
-//        return "Error";
     }
 
     protected String waitForString(String[] awaiting) throws Exception {
@@ -86,56 +66,15 @@ public abstract class Swich {
 
     protected String waitForString(String awaiting, String awaiting2, String awaiting3) throws Exception {
         return waitForStringWithContinue(new String[]{awaiting, awaiting2, awaiting3});
-//        int c;
-//        String s = "";
-//        while ((c = inputStream.read()) != -1) {
-//            System.err.print((char) c);
-//            s += ((char) c);
-//            checkForStop(s);
-//            if (s.endsWith(awaiting) || s.endsWith(awaiting2) || s.endsWith(awaiting3)) {
-//                result.append(s);
-//                return s;
-//            }
-//        }
-//        return "Error";
     }
 
     protected String waitForStringWithContinue(String awaiting, String awaiting2) throws Exception {
         return waitForStringWithContinue(new String[]{awaiting, awaiting2});
-
-//        int c;
-//        String s = "";
-//        while ((c = inputStream.read()) != -1) {
-//            System.err.print((char) c);
-//            s += ((char) c);
-//            checkForContinue(s);
-//            if (s.endsWith(awaiting) || s.endsWith(awaiting2)) {
-//                s = s.replaceAll("\n\n\n", "\n");
-//                s = s.replaceAll("\n\n\n", "\n");
-//                result.append(s);
-//                return s;
-//            }
-//        }
-//        return "Error";
     }
 
 
     protected String waitForStringWithContinue(String awaiting) throws Exception {
         return waitForStringWithContinue(new String[]{awaiting});
-//        int c;
-//        String s = "";
-//        while ((c = inputStream.read()) != -1) {
-//            System.err.print((char) c);
-//            s += ((char) c);
-//            checkForContinue(s);
-//            if (s.endsWith(awaiting)) {
-//                s = s.replaceAll("\n\n\n", "\n");
-//                s = s.replaceAll("\n\n\n", "\n");
-//                result.append(s);
-//                return s;
-//            }
-//        }
-//        return "Error";
     }
 
     protected String waitForStringWithContinue(String[] awaiting) throws Exception {

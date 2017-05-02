@@ -1,8 +1,10 @@
 package adeptius.swich;
 
 
+import adeptius.exceptions.FunctionNotSupportedException;
 import adeptius.exceptions.SimultaneousConfigException;
 
+import javax.naming.OperationNotSupportedException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -18,7 +20,21 @@ public class NewZte extends Swich {
     }
 
     @Override
+    public String findMacBdCom(String mac) throws Exception {
+        throw new FunctionNotSupportedException();
+    }
+
+
+    @Override
+    public void portUp(int port) throws Exception {
+        throw new FunctionNotSupportedException();
+    }
+
+    @Override
     public void makeStaticOnPort(int port) throws Exception {
+        if (port > 24) {
+            throw new OperationNotSupportedException();
+        }
         sendCommand("set dhcp snooping del port " + port + "\n");
         waitForString("#");
         sendCommand("set dhcp ip-source-guard del port " + port + "\n");
@@ -29,6 +45,9 @@ public class NewZte extends Swich {
 
     @Override
     public void makeDhcpOnPort(int port) throws Exception {
+        if (port > 24) {
+            throw new OperationNotSupportedException();
+        }
         sendCommand("set dhcp snooping-and-option82 enable\n");
         waitForString("#");
         sendCommand("set port " + port + " acl " + port + " dis\n");
